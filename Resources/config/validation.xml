@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+
+    <class name="Cannibal\Bundle\FilterBundle\Filter\Filter">
+        <property name="name">
+            <constraint name="NotNull"/>
+        </property>
+
+        <property name="comparison">
+            <constraint name="NotNull"/>
+            <constraint name="Choice">
+                <option name="callback">getComparisons</option>
+            </constraint>
+        </property>
+    </class>
+
+    <class name="Cannibal\Bundle\FilterBundle\Filter\FilterCollection">
+        <property name="filters">
+            <constraint name="Valid"/>
+        </property>
+
+        <constraint name="Callback">
+            <option name="methods">
+                <value>containsExpectedFilters</value>
+            </option>
+        </constraint>
+    </class>
+</constraint-mapping>

@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="Cannibal_filter.factory.filter" class="Cannibal\Bundle\FilterBundle\Filter\Factory\FilterFactory"/>
+        <service id="Cannibal_filter.factory.filter_collection" class="Cannibal\Bundle\FilterBundle\Filter\Factory\FilterCollectionFactory"/>
+
+        <service id="Cannibal_filter.doctrine.expr_factory" class="Cannibal\Bundle\FilterBundle\Filter\Doctrine\ExprFactory"/>
+
+        <service id="Cannibal_filter.filter.manager" class="Cannibal\Bundle\FilterBundle\Filter\FilterManager" scope="request">
+            <argument id="request" type="service"/>
+            <argument id="form.factory" type="service"/>
+            <argument id="Cannibal_filter.fetcher.filter" type="service"/>
+            <argument id="Cannibal_filter.factory.filter_collection" type="service"/>
+        </service>
+
+        <service id="Cannibal_filter.fetcher.filter" class="Cannibal\Bundle\FilterBundle\Filter\Request\Fetcher\FilterFetcher" scope="request">
+            <argument id="request" type="service"/>
+        </service>
+    </services>
+
+</container>
