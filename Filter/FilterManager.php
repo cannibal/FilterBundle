@@ -5,7 +5,6 @@ use Cannibal\Bundle\FilterBundle\Filter\Request\Fetcher\FilterFetcher;
 use Cannibal\Bundle\FilterBundle\Forms\FilterCollectionType;
 use Cannibal\Bundle\FilterBundle\Filter\Factory\FilterCollectionFactory;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormFactoryInterface;
 
 
@@ -18,15 +17,13 @@ use Symfony\Component\Form\FormFactoryInterface;
  */
 class FilterManager
 {
-    private $request;
     private $fetcher;
     private $formFactory;
     private $filterCollectionFactory;
 
-    public function __construct(Request $request, FormFactoryInterface $formFactory, FilterFetcher $fetcher, FilterCollectionFactory $filterFactory)
+    public function __construct(FormFactoryInterface $formFactory, FilterFetcher $fetcher, FilterCollectionFactory $filterFactory)
     {
         $this->fetcher = $fetcher;
-        $this->request = $request;
         $this->formFactory = $formFactory;
         $this->filterCollectionFactory = $filterFactory;
     }
@@ -67,19 +64,6 @@ class FilterManager
         return $this->fetcher;
     }
 
-    public function setRequest($request)
-    {
-        $this->request = $request;
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Request
-     */
-    public function getRequest()
-    {
-        return $this->request;
-    }
-
     /**
      * @return \Cannibal\Bundle\FilterBundle\Forms\FilterCollectionType
      */
@@ -95,12 +79,12 @@ class FilterManager
      * @param array $expectedFilters
      * @return \Cannibal\Bundle\FilterBundle\Filter\FilterCollectionInterface
      */
-    public function getFilters(array $expectedFilters)
+    public function getFilters(array $data, array $expectedFilters)
     {
         $fetcher = $this->getFetcher();
         $formFactory = $this->getFormFactory();
 
-        $filters = $fetcher->fetchFilters($expectedFilters);
+        $filters = $fetcher->fetchFilters($data, $expectedFilters);
 
         $type = $this->createFilterCollectionType();
 

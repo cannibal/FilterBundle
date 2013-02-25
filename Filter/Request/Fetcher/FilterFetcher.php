@@ -1,8 +1,6 @@
 <?php
 namespace Cannibal\Bundle\FilterBundle\Filter\Request\Fetcher;
 
-use Symfony\Component\HttpFoundation\Request;
-
 /**
  * Class FilterFetcher
  *
@@ -10,65 +8,40 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class FilterFetcher
 {
-    private $request;
-
-    public function __construct(Request $request)
+    public function fetchFilters(array $data, array $expectedFilters = array())
     {
-        $this->request = $request;
-    }
-
-    public function setRequest(Request $request)
-    {
-        $this->request = $request;
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Request
-     */
-    public function getRequest()
-    {
-        return $this->request;
-    }
-
-    public function fetchFilters(array $expectedFilters = array())
-    {
-        $request = $this->getRequest();
-
-        $query = $request->query;
-
         $out = array();
         foreach ($expectedFilters as $filter) {
-            if ($query->has($filter)) {
-                $filterParam = $query->get($filter);
-                if (isset($filterParam[$filter])) {
-                    $filterValues = $filterParam[$filter];
-                    if (is_array($filterValues)) {
-                        //family[like]test = family like test
+            if (isset($data[$filter])) {
+                $filterParam = $data[$filter];
 
-                        $keys = array_keys($filterValues);
-                        $comparison = isset($keys[0]) ? $keys[0] : null;
-                        $criteria = isset($filterValues[$comparison]) ? $filterValues[$comparison] : null;
+                if (is_array($filterParam)) {
+                    //family[like]test = family like test
 
-                        $new = array(
-                            'name' => $filter,
-                            'comparison' => $comparison,
-                            'criteria' => $criteria
-                        );
+                    $keys = array_keys($filterParam);
+                    $comparison = isset($keys[0]) ? $keys[0] : null;
+                    $criteria = isset($filterParam[$comparison]) ? $filterParam[$comparison] : null;
 
-                        $out['filters'][] = $new;
+                    $new = array(
+                        'name' => $filter,
+                        'comparison' => $comparison,
+                        'criteria' => $criteria
+                    );
 
-                    } else {
-                        //family=test = family eq test
-
-                        $new = array(
-                            'name' => $filter,
-                            'comparison' => 'eq',
-                            'criteria' => $filterValues
-                        );
-
-                        $out['filters'][] = $new;
-                    }
+                    $out['filters'][] = $new;
                 }
+                else {
+                    //family=test = family eq test
+
+                    $new = array(
+                        'name' => $filter,
+                        'comparison' => 'eq',
+                        'criteria' => $filterParam
+                    );
+
+                    $out['filters'][] = $new;
+                }
+
             }
         }
 

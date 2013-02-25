@@ -21,26 +21,9 @@ class FilterFetcherTest extends PHPUnit_Framework_TestCase
     /**
      * @return \Cannibal\Bundle\FilterBundle\Filter\Request\Fetcher\FilterFetcher
      */
-    public function createFilterFetcher($request)
+    public function createFilterFetcher()
     {
-        return new FilterFetcher($request);
-    }
-
-    /**
-     * @param array $methods
-     * @return \PHPUnit_Framework_MockObject_MockObject|\Symfony\Component\HttpFoundation\Request
-     */
-    public function createRequestMock(array $methods = array())
-    {
-        return $this->getMock('Symfony\\Component\\HttpFoundation\\Request', $methods);
-    }
-
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|\Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface
-     */
-    public function createParameterBagMock()
-    {
-        return $this->getMock('Symfony\\Component\\DependencyInjection\\ParameterBag\\ParameterBagInterface');
+        return new FilterFetcher();
     }
 
     public function dataProviderTestExtraction()
@@ -73,44 +56,23 @@ class FilterFetcherTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testDefaults()
-    {
-        $request = $this->createRequestMock();
-        $test = $this->createFilterFetcher($request);
-
-        $this->assertEquals($request, $test->getRequest());
-    }
-
     /**
      * @dataProvider dataProviderTestExtraction
      */
     public function testExtraction($input, $expected)
     {
-        $request = $this->createRequestMock();
-        $test = $this->createFilterFetcher($request);
+        $test = $this->createFilterFetcher();
 
-        $bag = $this->createParameterBagMock();
-        $bag->expects($this->once())->method('has')->with('filterName')->will($this->returnValue(true));
-        $bag->expects($this->once())->method('get')->with('filterName')->will($this->returnValue($input));
-        $request->query = $bag;
-
-        $test->setRequest($request);
-        $actual = $test->fetchFilters(array('filterName'));
+        $actual = $test->fetchFilters($input, array('filterName'));
 
         $this->assertEquals($expected, $actual);
     }
 
     public function testNoFilters()
     {
-        $request = $this->createRequestMock();
-        $test = $this->createFilterFetcher($request);
+        $test = $this->createFilterFetcher();
 
-        $bag = $this->createParameterBagMock();
-        $bag->expects($this->once())->method('has')->with('filterName')->will($this->returnValue(false));
-        $request->query = $bag;
-
-        $test->setRequest($request);
-        $actual = $test->fetchFilters(array('filterName'));
+        $actual = $test->fetchFilters(array(), array('filterName'));
 
         $this->assertEquals(array(), $actual);
     }
