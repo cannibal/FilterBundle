@@ -31,7 +31,7 @@ class Filter implements FilterInterface
         return $this->isNot;
     }
 
-    public function getComparisons()
+    public static function getComparisons()
     {
         return array(
             FilterInterface::EQ,
