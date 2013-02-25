@@ -6,9 +6,10 @@ use Cannibal\Bundle\FilterBundle\Filter\FilterInterface,
 
 use Cannibal\Bundle\FilterBundle\Filter\Doctrine\Exception\ExprFactoryException;
 
-use Doctrine\Common\Collections\Expr\Comparison,
+use Doctrine\Common\Collections,
+    Doctrine\ORM\Query\Expr,
     Doctrine\ORM\Query\Expr\Func,
-    Doctrine\ORM\Query\Expr;
+    Doctrine\ORM\Query\Expr\Comparison;
 
 class ExprFactory implements ExprFactoryInterface
 {
@@ -25,14 +26,14 @@ class ExprFactory implements ExprFactoryInterface
      * @param $paramName
      * @param \Cannibal\Bundle\FilterBundle\Filter\FilterInterface $filter
      *
-     * @return \Doctrine\Common\Collections\Expr\Comparison|\Doctrine\ORM\Query\Expr\Func|null
+     * @return \Doctrine\ORM\Query\Expr\Comparison|\Doctrine\ORM\Query\Expr\Func|null
      *
      * @throws Exception\ExprFactoryException
      */
-    public function createExpr($memberName, FilterInterface $filter, $paramName = null)
+    public function createExpr($memberName, FilterInterface $filter, $bindName)
     {
         $modifier = $filter->getComparison();
-        $value = $paramName != null ? sprintf(':%s', $paramName) : $filter->getCriteria();
+        $value = $bindName != null ? $bindName : $filter->getCriteria();
 
         $isNot = $filter->isNot();
 
@@ -79,13 +80,10 @@ class ExprFactory implements ExprFactoryInterface
                 }
                 break;
             case FilterInterface::IN:
-                switch($isNot){
-                    case true:
-                        $out = new Comparison($memberName, Comparison::NIN, $value);
-                        break;
-                    case false:
-                        $out = new Comparison($memberName, Comparison::IN, $value);
-                        break;
+                $out = $expr->in($memberName, $value);
+
+                if($isNot){
+                    $out = $expr->not($out);
                 }
                 break;
             default:

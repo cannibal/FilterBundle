@@ -13,5 +13,5 @@ interface ExprFactoryInterface
      * @return \Doctrine\Common\Collections\Expr\Comparison|\Doctrine\ORM\Query\Expr\Func|null
      * @throws \Exception
      */
-    public function createExpr($memberName, FilterInterface $filter, $paramName = null);
+    public function createExpr($memberName, FilterInterface $filter, $paramName);
 }
