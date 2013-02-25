@@ -19,10 +19,10 @@ class FilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text')
-            ->add('criteria', 'choice', array(
+            ->add('comparison', 'choice', array(
                 'choices'=>$this->getOperationChoices()
             ))
-            ->add('comparison'. 'text');
+            ->add('criteria', 'text');
     }
 
     public function getOperationChoices()
