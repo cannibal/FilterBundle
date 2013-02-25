@@ -26,8 +26,6 @@ class ExprFactoryTest extends PHPUnit_Framework_TestCase
     public function dataProviderCreateExpr()
     {
         return array(
-            array(FilterInterface::LIKE, false, 'LIKE'),
-            array(FilterInterface::ILIKE, false, 'ILIKE'),
             array(FilterInterface::EQ, false, '='),
             array(FilterInterface::EQ, true, '<>'),
             array(FilterInterface::GT, false, '>'),
@@ -60,15 +58,8 @@ class ExprFactoryTest extends PHPUnit_Framework_TestCase
             $expr = $expr[0];
         }
 
-        if($modifierIn == FilterInterface::LIKE){
-            $this->assertEquals($expr->getOperator(), $expectedOperator);
-            $field = $expr->getLeftExpr();
-            $this->assertInstanceOf('Doctrine\\Orm\\Query\\Expr\\Func', $field);
-            $this->assertEquals('lower', $field->getName());
-            $this->assertEquals(1, count($field->getArguments()));
 
-        }
-        elseif($modifierIn == FilterInterface::IN){
+        if($modifierIn == FilterInterface::IN){
             $this->assertEquals(self::MEMBERNAME.' IN', $expr->getName());
             $args = $expr->getArguments();
             $this->assertEquals(self::BINDNAME, $args[0]);
@@ -92,20 +83,15 @@ class ExprFactoryTest extends PHPUnit_Framework_TestCase
         $expr = $test->createExpr(self::MEMBERNAME, $filter, self::BINDNAME);
 
         $this->assertInstanceOf('Doctrine\\Orm\\Query\\Expr\\Func', $expr);
-        $this->assertEquals('NOT', $expr->getName());
-        $this->assertEquals(1, count($expr->getArguments()));
+        $this->assertCount(1, $expr->getArguments());
+        $expr = $expr->getArguments();
 
-        /** @var Comparison $like  */
-        $like = $expr->getArguments();
-        $like = $like[0];
+        /** @var Comparison $expr  */
+        $expr = $expr[0];
 
-        $this->assertEquals($like->getOperator(), 'LIKE');
-        $this->assertEquals($like->getRightExpr(), self::BINDNAME);
-
-        $field = $like->getLeftExpr();
-        $this->assertInstanceOf('Doctrine\\Orm\\Query\\Expr\\Func', $field);
-        $this->assertEquals('lower', $field->getName());
-        $this->assertEquals(1, count($field->getArguments()));
+        $this->assertEquals($expr->getLeftExpr(), self::MEMBERNAME);
+        $this->assertEquals($expr->getOperator(), 'LIKE');
+        $this->assertEquals($expr->getRightExpr(), self::BINDNAME);
 
     }
 
@@ -121,16 +107,19 @@ class ExprFactoryTest extends PHPUnit_Framework_TestCase
         $expr = $test->createExpr(self::MEMBERNAME, $filter, self::BINDNAME);
 
         $this->assertInstanceOf('Doctrine\\Orm\\Query\\Expr\\Func', $expr);
-        $this->assertEquals('NOT', $expr->getName());
-        $this->assertEquals(1, count($expr->getArguments()));
+        $this->assertCount(1, $expr->getArguments());
+        $expr = $expr->getArguments();
 
-        /** @var Comparison $like  */
-        $like = $expr->getArguments();
-        $like = $like[0];
+        /** @var Comparison $expr  */
+        $expr = $expr[0];
 
-        $this->assertEquals($like->getLeftExpr(), self::MEMBERNAME);
-        $this->assertEquals($like->getOperator(), 'ILIKE');
-        $this->assertEquals($like->getRightExpr(), self::BINDNAME);
+        $field = $expr->getLeftExpr();
+        $this->assertInstanceOf('Doctrine\\Orm\\Query\\Expr\\Func', $field);
+        $this->assertEquals('lower', $field->getName());
+        $this->assertEquals(1, count($field->getArguments()));
+
+        $this->assertEquals($expr->getOperator(), 'ILIKE');
+        $this->assertEquals($expr->getRightExpr(), self::BINDNAME);
     }
 
     public function testUnknownFilterModifier()

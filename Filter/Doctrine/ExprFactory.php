@@ -33,7 +33,7 @@ class ExprFactory implements ExprFactoryInterface
     public function createExpr($memberName, FilterInterface $filter, $bindName)
     {
         $modifier = $filter->getComparison();
-        $value = $bindName != null ? $bindName : $filter->getCriteria();
+        $value = $bindName;
 
         $isNot = $filter->isNot();
 
@@ -43,14 +43,14 @@ class ExprFactory implements ExprFactoryInterface
 
         switch($modifier){
             case FilterInterface::LIKE:
-                $out = new Comparison(new Func('lower', array($memberName)), 'LIKE', $value);
+                $out = $expr->like($memberName, $value);
                 if ($isNot) {
                     $out = $expr->not($out);
                 }
                 break;
 
             case FilterInterface::ILIKE:
-                $out = new Comparison($memberName, 'ILIKE', $value);
+                $out = new Comparison(new Func('lower', array($memberName)), 'ILIKE', $value);
                 if ($isNot) {
                     $out = $expr->not($out);
                 }
