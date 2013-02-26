@@ -30,6 +30,7 @@ class FilterType extends AbstractType
         return array(
             FilterInterface::EQ=>'=',
             FilterInterface::LIKE=>'Like',
+            FilterInterface::ILIKE=>'iLike',
             FilterInterface::LT=>'<',
             FilterInterface::LTE=>'<=',
             FilterInterface::GT=>'>',
