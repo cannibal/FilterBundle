@@ -50,7 +50,7 @@ class ExprFactory implements ExprFactoryInterface
                 break;
 
             case FilterInterface::ILIKE:
-                $out = new Comparison(new Func('lower', array($memberName)), 'ILIKE', $value);
+                $out = new Comparison(new Func('lower', array($memberName)), 'LIKE', $value);
                 if ($isNot) {
                     $out = $expr->not($out);
                 }

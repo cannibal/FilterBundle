@@ -118,7 +118,7 @@ class ExprFactoryTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('lower', $field->getName());
         $this->assertEquals(1, count($field->getArguments()));
 
-        $this->assertEquals($expr->getOperator(), 'ILIKE');
+        $this->assertEquals($expr->getOperator(), 'LIKE');
         $this->assertEquals($expr->getRightExpr(), self::BINDNAME);
     }
 
