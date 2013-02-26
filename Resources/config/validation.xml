@@ -14,6 +14,14 @@
                 <option name="callback">getComparisons</option>
             </constraint>
         </property>
+        
+        <property name="criteria">
+            <constraint name="Callback">
+                <option name="methods">
+                    <value>containsExpectedCriteriaType</value>
+                </option>
+            </constraint>
+        </property>
     </class>
 
     <class name="Cannibal\Bundle\FilterBundle\Filter\FilterCollection">

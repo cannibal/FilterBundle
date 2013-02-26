@@ -11,7 +11,7 @@ class FilterFetcher
     public function fetchFilters(array $data, array $expectedFilters = array())
     {
         $out = array();
-        foreach ($expectedFilters as $filter) {
+        foreach ($expectedFilters as $filter => $type) {
             if (isset($data[$filter])) {
                 $filterParam = $data[$filter];
 
@@ -25,7 +25,8 @@ class FilterFetcher
                     $new = array(
                         'name' => $filter,
                         'comparison' => $comparison,
-                        'criteria' => $criteria
+                        'criteria' => $criteria,
+                        'type'=>$type
                     );
 
                     $out['filters'][] = $new;
@@ -36,7 +37,8 @@ class FilterFetcher
                     $new = array(
                         'name' => $filter,
                         'comparison' => 'eq',
-                        'criteria' => $filterParam
+                        'criteria' => $filterParam,
+                        'type'=>$type
                     );
 
                     $out['filters'][] = $new;

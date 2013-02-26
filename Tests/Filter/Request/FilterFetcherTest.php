@@ -36,7 +36,8 @@ class FilterFetcherTest extends PHPUnit_Framework_TestCase
                         array(
                             'name'=>'filterName',
                             'comparison'=>'comparison',
-                            'criteria'=>'criteria'
+                            'criteria'=>'criteria',
+                            'type'=>'type'
                         )
                     )
                 )
@@ -48,7 +49,8 @@ class FilterFetcherTest extends PHPUnit_Framework_TestCase
                         array(
                             'name'=>'filterName',
                             'comparison'=>'eq',
-                            'criteria'=>'criteria'
+                            'criteria'=>'criteria',
+                            'type'=>'type'
                         )
                     )
                 )
@@ -63,7 +65,7 @@ class FilterFetcherTest extends PHPUnit_Framework_TestCase
     {
         $test = $this->createFilterFetcher();
 
-        $actual = $test->fetchFilters($input, array('filterName'));
+        $actual = $test->fetchFilters($input, array('filterName'=>'type'));
 
         $this->assertEquals($expected, $actual);
     }
@@ -72,7 +74,7 @@ class FilterFetcherTest extends PHPUnit_Framework_TestCase
     {
         $test = $this->createFilterFetcher();
 
-        $actual = $test->fetchFilters(array(), array('filterName'));
+        $actual = $test->fetchFilters(array(), array('filterName'=>'type'));
 
         $this->assertEquals(array(), $actual);
     }

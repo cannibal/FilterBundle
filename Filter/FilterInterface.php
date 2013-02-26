@@ -15,6 +15,10 @@ interface FilterInterface
     const GTE = 'gte';
     const IN = 'in';
 
+    const TYPE_DATE = 'date';
+    const TYPE_TEXT = 'text';
+    const TYPE_INT = 'int';
+
     /**
      * @return string
      */
