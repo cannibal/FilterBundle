@@ -18,6 +18,7 @@ interface FilterInterface
     const TYPE_DATE = 'date';
     const TYPE_TEXT = 'text';
     const TYPE_INT = 'int';
+    const TYPE_BOOL = 'boolean';
 
     /**
      * @return string

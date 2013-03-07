@@ -33,6 +33,7 @@ class ExprFactory implements ExprFactoryInterface
     public function createExpr($memberName, FilterInterface $filter, $bindName)
     {
         $modifier = $filter->getComparison();
+
         $value = $bindName;
 
         $isNot = $filter->isNot();

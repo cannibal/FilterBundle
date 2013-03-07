@@ -8,6 +8,8 @@ use Symfony\Component\Validator\Constraints\DateValidator;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\RegexValidator;
 use Symfony\Component\Validator\ExecutionContext;
+use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Constraints\TypeValidator;
 
 /**
  * This class represents a filter against some list resource
@@ -53,6 +55,7 @@ class Filter implements FilterInterface
     {
         $constraint = null;
         $validator = null;
+        $value = $this->getCriteria();
 
         switch($this->getType()){
             case FilterInterface::TYPE_DATE:
@@ -63,13 +66,18 @@ class Filter implements FilterInterface
                 $constraint = new Regex(array('pattern'=>'/^\d+$/'));
                 $validator = new RegexValidator();
                 break;
+            case FilterInterface::TYPE_BOOL:
+                if($value != 'true' && $value != 'false'){
+                    $context->addViolationAtPath('criteria', 'Criteria is not a valid boolean');
+                }
+                break;
             default:
-                $constraint = new Date();
-                $validator = new DateValidator();
         }
 
-        $validator->initialize($context);
-        $validator->validate($this->getCriteria(), $constraint);
+        if(null != $constraint && null != $validator){
+            $validator->initialize($context);
+            $validator->validate($value, $constraint);
+        }
     }
 
     public static function getComparisons()
