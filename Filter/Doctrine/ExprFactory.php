@@ -11,6 +11,8 @@ use Doctrine\Common\Collections,
     Doctrine\ORM\Query\Expr\Func,
     Doctrine\ORM\Query\Expr\Comparison;
 
+use Doctrine\ORM\QueryBuilder;
+
 class ExprFactory implements ExprFactoryInterface
 {
     /**
@@ -30,11 +32,11 @@ class ExprFactory implements ExprFactoryInterface
      *
      * @throws Exception\ExprFactoryException
      */
-    public function createExpr($memberName, FilterInterface $filter, $bindName)
+    public function createExpr($memberName, FilterInterface $filter, $bindName, $doBind = true)
     {
         $modifier = $filter->getComparison();
 
-        $value = $bindName;
+        $value = $filter->getCriteria();
 
         $isNot = $filter->isNot();
 
@@ -44,54 +46,45 @@ class ExprFactory implements ExprFactoryInterface
 
         switch($modifier){
             case FilterInterface::LIKE:
-                $out = $expr->like($memberName, $value);
-                if ($isNot) {
-                    $out = $expr->not($out);
-                }
+                $out = $expr->like($memberName, $bindName);
                 break;
-
             case FilterInterface::ILIKE:
-                $out = new Comparison(new Func('lower', array($memberName)), 'LIKE', $value);
-                if ($isNot) {
-                    $out = $expr->not($out);
-                }
+                $out = new Comparison(new Func('lower', array($memberName)), 'LIKE', new Func('lower', $bindName));
                 break;
-
             case FilterInterface::GT:
-                $out = new Comparison($memberName, Comparison::GT, $value);
+                $out = new Comparison($memberName, Comparison::GT, $bindName);
                 break;
             case FilterInterface::GTE:
-                $out = new Comparison($memberName, Comparison::GTE, $value);
+                $out = new Comparison($memberName, Comparison::GTE, $bindName);
                 break;
             case FilterInterface::LT:
-                $out = new Comparison($memberName, Comparison::LT, $value);
+                $out = new Comparison($memberName, Comparison::LT, $bindName);
                 break;
             case FilterInterface::LTE:
-                $out = new Comparison($memberName, Comparison::LTE, $value);
+                $out = new Comparison($memberName, Comparison::LTE, $bindName);
+                break;
+            case FilterInterface::NULLABLE_EQ:
+                if(empty($value)){
+                    $out = $expr->orX($expr->isNull($memberName), $expr->eq($memberName, ''));
+                }
+                else{
+                    $out = new Comparison($memberName, Comparison::EQ, $bindName);
+                }
                 break;
             case FilterInterface::EQ:
-            case null:
-                switch($isNot){
-                    case true:
-                        $out = new Comparison($memberName, Comparison::NEQ, $value);
-                        break;
-                    case false:
-                        $out = new Comparison($memberName, Comparison::EQ, $value);
-                        break;
-                }
+                $out = new Comparison($memberName, Comparison::EQ, $bindName);
                 break;
             case FilterInterface::IN:
-                $out = $expr->in($memberName, $value);
-
-                if($isNot){
-                    $out = $expr->not($out);
-                }
+                $out = $expr->in($memberName, $bindName);
                 break;
             default:
             throw new ExprFactoryException(sprintf('Could not resolve FilterExpression expression %s', $modifier));
         }
 
+        if($isNot){
+            $out = $expr->not($out);
+        }
+
         return $out;
     }
-
 }

@@ -6,7 +6,8 @@ use PHPUnit_Framework_TestCase;
 use Cannibal\Bundle\FilterBundle\Filter\Doctrine\ExprFactory;
 use Cannibal\Bundle\FilterBundle\Filter\FilterInterface;
 use Doctrine\ORM\Query\Expr\Comparison,
-    Doctrine\ORM\Query\Expr\Func;
+    Doctrine\ORM\Query\Expr\Func,
+    Doctrine\ORM\Query\Expr\Orx;
 
 class ExprFactoryTest extends PHPUnit_Framework_TestCase
 {
@@ -27,7 +28,6 @@ class ExprFactoryTest extends PHPUnit_Framework_TestCase
     {
         return array(
             array(FilterInterface::EQ, false, '='),
-            array(FilterInterface::EQ, true, '<>'),
             array(FilterInterface::GT, false, '>'),
             array(FilterInterface::LT, false, '<'),
             array(FilterInterface::LTE, false, '<='),
@@ -50,8 +50,7 @@ class ExprFactoryTest extends PHPUnit_Framework_TestCase
 
         $expr = $test->createExpr(self::MEMBERNAME, $filter, self::BINDNAME);
 
-        if($notModifier && $modifierIn != FilterInterface::EQ){
-            echo "";
+        if($notModifier){
             $this->assertInstanceOf('Doctrine\\Orm\\Query\\Expr\\Func', $expr);
             $this->assertCount(1, $expr->getArguments());
             $expr = $expr->getArguments();
@@ -95,6 +94,46 @@ class ExprFactoryTest extends PHPUnit_Framework_TestCase
 
     }
 
+    public function dataProviderNullableEQ()
+    {
+        return array(
+            array(null),
+            array(''),
+        );
+    }
+
+    /**
+     * @dataProvider dataProviderNullableEQ
+     */
+    public function testCreateExprNullableEQ($value)
+    {
+        $test = $this->getExprFactory();
+
+        $filter = $this->getFilterMock();
+        $filter->expects($this->once())->method('getComparison')->will($this->returnValue(FilterInterface::NULLABLE_EQ));
+        $filter->expects($this->once())->method('isNot')->will($this->returnValue(false));
+        $filter->expects($this->once())->method('getCriteria')->will($this->returnValue(null));
+
+        /** @var Orx $expr  */
+        $expr = $test->createExpr(self::MEMBERNAME, $filter, self::BINDNAME);
+
+        $this->assertInstanceOf('Doctrine\\Orm\\Query\\Expr\\Orx', $expr);
+        $parts = $expr->getParts();
+        $this->assertCount(2, $expr->getParts());
+
+        /** @var Comparison $expr  */
+        $expr = $parts[0];
+
+        $this->assertEquals(self::MEMBERNAME.' IS NULL', $parts[0]);
+
+        /** @var Comparison $expr  */
+        $expr = $parts[1];
+
+        $this->assertEquals($expr->getLeftExpr(), self::MEMBERNAME);
+        $this->assertEquals($expr->getOperator(), '=');
+        $this->assertEquals($expr->getRightExpr(), '');
+    }
+
     public function testCreateExprILike()
     {
         $test = $this->getExprFactory();
@@ -119,7 +158,14 @@ class ExprFactoryTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($field->getArguments()));
 
         $this->assertEquals($expr->getOperator(), 'LIKE');
-        $this->assertEquals($expr->getRightExpr(), self::BINDNAME);
+
+        $field = $expr->getRightExpr();
+        $this->assertInstanceOf('Doctrine\\Orm\\Query\\Expr\\Func', $field);
+        $this->assertEquals('lower', $field->getName());
+        $this->assertEquals(1, count($field->getArguments()));
+
+
+        $this->assertEquals($field->getArguments(), array(self::BINDNAME));
     }
 
     public function testUnknownFilterModifier()

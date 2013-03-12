@@ -104,6 +104,32 @@ class Filter implements FilterInterface
         return $this->criteria;
     }
 
+    public function getCastCriteria()
+    {
+        $value = $this->getCriteria();
+        $out = null;
+        $type = $this->getType();
+
+        switch($this->getType()){
+            case FilterInterface::TYPE_INT:
+                $out = filter_var($value, \FILTER_VALIDATE_INT);
+                break;
+            case FilterInterface::TYPE_DATE:
+                $out = \DateTime::createFromFormat(\DateTime::ISO8601, $out);
+                if($out == false){
+                    throw new \Cannibal\Bundle\FilterBundle\Filter\Exception\FilterCastException(sprintf('Failed to cast %s as a %s',$value, $type));
+                }
+
+                break;
+            case FilterInterface::TYPE_BOOL:
+                $out = filter_var($out, \FILTER_VALIDATE_BOOLEAN, \FILTER_NULL_ON_FAILURE);
+                if(null == $out){
+                    throw new \Cannibal\Bundle\FilterBundle\Filter\Exception\FilterCastException(sprintf('Failed to cast %s as a %s', $value, $type));
+                }
+                break;
+        }
+    }
+
     public function setComparison($comparison)
     {
         $this->comparison = $comparison;

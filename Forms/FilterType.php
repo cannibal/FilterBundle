@@ -22,7 +22,9 @@ class FilterType extends AbstractType
             ->add('comparison', 'choice', array(
                 'choices'=>$this->getOperationChoices()
             ))
-            ->add('criteria', 'text');
+            ->add('criteria', 'text')
+            ->add('isNot', 'checkbox', array('value'=>'true'))
+        ;
     }
 
     public function getOperationChoices()

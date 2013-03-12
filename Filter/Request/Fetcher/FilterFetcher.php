@@ -1,6 +1,8 @@
 <?php
 namespace Cannibal\Bundle\FilterBundle\Filter\Request\Fetcher;
 
+use Cannibal\Bundle\FilterBundle\Filter\FilterInterface;
+
 /**
  * Class FilterFetcher
  *
@@ -12,7 +14,10 @@ class FilterFetcher
     {
         $out = array();
         foreach ($expectedFilters as $filter => $type) {
-            if (isset($data[$filter])) {
+            $notKey = sprintf('%s!', $filter);
+            if (isset($data[$filter]) || isset($data[$notKey])) {
+                $not = $filter == $notKey ? true : false;
+                $filter = preg_replace('/!/', '', $filter);
                 $filterParam = $data[$filter];
 
                 if (is_array($filterParam)) {
@@ -26,8 +31,13 @@ class FilterFetcher
                         'name' => $filter,
                         'comparison' => $comparison,
                         'criteria' => $criteria,
-                        'type'=>$type
+                        'type'=>$type,
+
                     );
+
+                    if($not){
+                        $new['is_not'] = 'true';
+                    }
 
                     $out['filters'][] = $new;
                 }
@@ -36,10 +46,14 @@ class FilterFetcher
 
                     $new = array(
                         'name' => $filter,
-                        'comparison' => 'eq',
+                        'comparison' => FilterInterface::NULLABLE_EQ,
                         'criteria' => $filterParam,
-                        'type'=>$type
+                        'type'=>$type,
                     );
+
+                    if($not){
+                        $new['is_not'] = 'true';
+                    }
 
                     $out['filters'][] = $new;
                 }

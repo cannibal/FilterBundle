@@ -48,7 +48,7 @@ class FilterFetcherTest extends PHPUnit_Framework_TestCase
                     'filters'=>array(
                         array(
                             'name'=>'filterName',
-                            'comparison'=>'eq',
+                            'comparison'=>'null_compat_eq',
                             'criteria'=>'criteria',
                             'type'=>'type'
                         )

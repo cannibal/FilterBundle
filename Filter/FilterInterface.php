@@ -6,6 +6,7 @@ namespace Cannibal\Bundle\FilterBundle\Filter;
  */
 interface FilterInterface
 {
+    const NULLABLE_EQ = 'null_compat_eq';
     const EQ = 'eq';
     const LIKE = 'like';
     const ILIKE = 'ilike';
@@ -18,6 +19,7 @@ interface FilterInterface
     const TYPE_DATE = 'date';
     const TYPE_TEXT = 'text';
     const TYPE_INT = 'int';
+    const TYPE_FLOAT = 'float';
     const TYPE_BOOL = 'boolean';
 
     /**
