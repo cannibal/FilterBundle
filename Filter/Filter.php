@@ -19,7 +19,7 @@ class Filter implements FilterInterface
     private $name;
     private $comparison;
     private $criteria;
-    private $isNot;
+    private $not;
     private $type;
 
     public function __construct()
@@ -27,7 +27,7 @@ class Filter implements FilterInterface
         $this->name = null;
         $this->comparison = null;
         $this->criteria = null;
-        $this->isNot = false;
+        $this->not = false;
         $this->type = null;
     }
 
@@ -41,14 +41,19 @@ class Filter implements FilterInterface
         return $this->type;
     }
 
-    public function setIsNot($isNot)
+    public function setNot($isNot)
     {
-        $this->isNot = $isNot;
+        $this->not = $isNot;
+    }
+
+    public function getNot()
+    {
+        return $this->not;
     }
 
     public function isNot()
     {
-        return $this->isNot;
+        return $this->not;
     }
 
     public function containsExpectedCriteriaType(ExecutionContext $context)

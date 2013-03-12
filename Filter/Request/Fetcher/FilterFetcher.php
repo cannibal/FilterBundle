@@ -36,7 +36,7 @@ class FilterFetcher
                     );
 
                     if($not){
-                        $new['is_not'] = 'true';
+                        $new['not'] = 'true';
                     }
 
                     $out['filters'][] = $new;
@@ -52,7 +52,7 @@ class FilterFetcher
                     );
 
                     if($not){
-                        $new['is_not'] = 'true';
+                        $new['not'] = 'true';
                     }
 
                     $out['filters'][] = $new;

@@ -23,13 +23,14 @@ class FilterType extends AbstractType
                 'choices'=>$this->getOperationChoices()
             ))
             ->add('criteria', 'text')
-            ->add('isNot', 'checkbox', array('value'=>'true'))
+            ->add('not', 'checkbox', array('value'=>'true'))
         ;
     }
 
     public function getOperationChoices()
     {
         return array(
+            FilterInterface::NULLABLE_EQ=>'nullable=',
             FilterInterface::EQ=>'=',
             FilterInterface::LIKE=>'Like',
             FilterInterface::ILIKE=>'iLike',
