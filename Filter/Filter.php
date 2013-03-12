@@ -3,13 +3,12 @@ namespace Cannibal\Bundle\FilterBundle\Filter;
 
 use Cannibal\Bundle\FilterBundle\Filter\FilterInterface;
 
+
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Constraints\DateValidator;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\RegexValidator;
 use Symfony\Component\Validator\ExecutionContext;
-use Symfony\Component\Validator\Constraints\Type;
-use Symfony\Component\Validator\Constraints\TypeValidator;
 
 /**
  * This class represents a filter against some list resource
@@ -19,7 +18,7 @@ class Filter implements FilterInterface
     private $name;
     private $comparison;
     private $criteria;
-    private $not;
+    private $isNot;
     private $type;
 
     public function __construct()
@@ -41,19 +40,19 @@ class Filter implements FilterInterface
         return $this->type;
     }
 
-    public function setNot($isNot)
+    public function getIsNot()
     {
-        $this->not = $isNot;
+        return $this->isNot;
     }
 
-    public function getNot()
+    public function setIsNot($isNot)
     {
-        return $this->not;
+        $this->isNot = $isNot;
     }
 
     public function isNot()
     {
-        return $this->not;
+        return $this->isNot;
     }
 
     public function containsExpectedCriteriaType(ExecutionContext $context)
