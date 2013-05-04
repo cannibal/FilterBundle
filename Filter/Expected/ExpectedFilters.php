@@ -1,17 +1,10 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: mv
- * Date: 04/05/13
- * Time: 21:27
- * To change this template use File | Settings | File Templates.
- */
-
 namespace Cannibal\Bundle\FilterBundle\Filter\Expected;
 
 use Cannibal\Bundle\FilterBundle\Filter\Expected\ExpectedFilterInterface;
+use Cannibal\Bundle\FilterBundle\Filter\Expected\ExpectedFiltersInterface;
 
-class ExpectedFilters
+class ExpectedFilters implements ExpectedFiltersInterface
 {
     private $filters;
 

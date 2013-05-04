@@ -10,7 +10,7 @@ interface ExpectedFilterBuildContextInterface
     /**
      * @return \Cannibal\Bundle\FilterBundle\Filter\Expected\ExpectedFilterBuildContextInterface
      */
-    public function add($name, $type, array $config = array());
+    public function add($name, $type = null, array $config = array());
 
     /**
      * @return \Cannibal\Bundle\FilterBundle\Filter\Expected\ExpectedFiltersInterface

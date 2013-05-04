@@ -3,8 +3,17 @@
 <container xmlns="http://symfony.com/schema/dic/services"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    
+    <parameters>
+        <parameter key="cannibal_filter.expected.filter.builder.class">Cannibal\Bundle\FilterBundle\Filter\Expected\ExpectedFilterBuilder</parameter>
+        <parameter key="cannibal_filter.expected.filter_factory.class">Cannibal\Bundle\FilterBundle\Filter\Expected\ExpectedFilterFactory</parameter>
+    </parameters>
 
     <services>
+        <service id="cannibal_filter.expected.filter.builder" class="%cannibal_filter.expected.filter.builder.class%">
+            <argument id="cannibal_filter.expected.filter_factory" type="service"/>
+        </service>
+        <service id="cannibal_filter.expected.filter_factory" class="%cannibal_filter.expected.filter_factory.class%"/>
         <service id="cannibal_filter.factory.filter" class="Cannibal\Bundle\FilterBundle\Filter\Factory\FilterFactory"/>
         <service id="cannibal_filter.factory.filter_collection" class="Cannibal\Bundle\FilterBundle\Filter\Factory\FilterCollectionFactory"/>
 

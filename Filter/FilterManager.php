@@ -4,6 +4,7 @@ namespace Cannibal\Bundle\FilterBundle\Filter;
 use Cannibal\Bundle\FilterBundle\Filter\Request\Fetcher\FilterFetcher;
 use Cannibal\Bundle\FilterBundle\Forms\FilterCollectionType;
 use Cannibal\Bundle\FilterBundle\Filter\Factory\FilterCollectionFactory;
+use Cannibal\Bundle\FilterBundle\Filter\Expected\ExpectedFiltersInterface;
 
 use Symfony\Component\Form\FormFactoryInterface;
 
@@ -79,7 +80,7 @@ class FilterManager
      * @param array $expectedFilters
      * @return \Cannibal\Bundle\FilterBundle\Filter\FilterCollectionInterface
      */
-    public function getFilters(array $data, array $expectedFilters)
+    public function getFilters(array $data, ExpectedFiltersInterface $expectedFilters)
     {
         $fetcher = $this->getFetcher();
         $formFactory = $this->getFormFactory();

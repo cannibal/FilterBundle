@@ -10,10 +10,10 @@
 namespace Cannibal\Bundle\FilterBundle\Filter\Expected;
 
 use Cannibal\Bundle\FilterBundle\Filter\Expected\ExpectedFilterFactory;
-
+use Cannibal\Bundle\FilterBundle\Filter\FilterInterface;
 use Cannibal\Bundle\FilterBundle\Filter\Expected\ExpectedFilterBuildContextInterface;
 
-class ExpectedFilterBuilder
+class ExpectedFilterBuilder implements ExpectedFilterBuildContextInterface
 {
     private $expectedFactory;
     private $currentCollection;
@@ -54,9 +54,13 @@ class ExpectedFilterBuilder
      * @param array $config
      * @return \Cannibal\Bundle\FilterBundle\Filter\Expected\ExpectedFilterBuildContextInterface
      */
-    public function add($name, $type, array $config = array())
+    public function add($name, $type = null, array $config = array())
     {
         $out = $this->getExpectedFactory()->createExpectedFilter($name);
+
+        if($type == null){
+            $type = FilterInterface::TYPE_STRING;
+        }
 
         $out->setType($type);
 
@@ -65,5 +69,13 @@ class ExpectedFilterBuilder
         }
 
         return $this;
+    }
+
+    /**
+     * @return \Cannibal\Bundle\FilterBundle\Filter\Expected\ExpectedFiltersInterface
+     */
+    public function end()
+    {
+        return $this->currentCollection;
     }
 }
