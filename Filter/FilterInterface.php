@@ -16,11 +16,12 @@ interface FilterInterface
     const GTE = 'gte';
     const IN = 'in';
 
-    const TYPE_DATE = 'date';
+    const TYPE_DATETIME = 'datetime';
     const TYPE_TEXT = 'text';
     const TYPE_INT = 'int';
     const TYPE_FLOAT = 'float';
     const TYPE_BOOL = 'boolean';
+    const TYPE_STRING = 'string';
 
     /**
      * @return string

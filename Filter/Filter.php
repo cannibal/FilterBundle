@@ -2,12 +2,6 @@
 namespace Cannibal\Bundle\FilterBundle\Filter;
 
 use Cannibal\Bundle\FilterBundle\Filter\FilterInterface;
-
-
-use Symfony\Component\Validator\Constraints\Date;
-use Symfony\Component\Validator\Constraints\DateValidator;
-use Symfony\Component\Validator\Constraints\Regex;
-use Symfony\Component\Validator\Constraints\RegexValidator;
 use Symfony\Component\Validator\ExecutionContext;
 
 /**
@@ -62,25 +56,28 @@ class Filter implements FilterInterface
         $value = $this->getCriteria();
 
         switch($this->getType()){
-            case FilterInterface::TYPE_DATE:
-                $constraint = new Date();
-                $validator = new DateValidator();
+            case FilterInterface::TYPE_DATETIME:
+                    $out = \DateTime::createFromFormat(\DateTime::ISO8601, $value);
+                    if($out == false){
+                        $context->addViolationAt('criteria', 'Criteria is not a valid date time');
+                    }
                 break;
             case FilterInterface::TYPE_INT:
-                $constraint = new Regex(array('pattern'=>'/^\d+$/'));
-                $validator = new RegexValidator();
+                if(preg_match('/^\d+$/', $value) == 0){
+                    $context->addViolationAt('criteria', 'Criteria is not a valid integer');
+                }
+                break;
+            case FilterInterface::TYPE_FLOAT:
+                if(preg_match('/^\d+\.\d+$/', $value) == 0){
+                    $context->addViolationAt('criteria', 'Criteria is not a valid integer');
+                }
                 break;
             case FilterInterface::TYPE_BOOL:
                 if($value != 'true' && $value != 'false'){
-                    $context->addViolationAtPath('criteria', 'Criteria is not a valid boolean');
+                    $context->addViolationAt('criteria', 'Criteria is not a valid boolean');
                 }
                 break;
             default:
-        }
-
-        if(null != $constraint && null != $validator){
-            $validator->initialize($context);
-            $validator->validate($value, $constraint);
         }
     }
 
@@ -110,28 +107,35 @@ class Filter implements FilterInterface
 
     public function getCastCriteria()
     {
-        $value = $this->getCriteria();
         $out = null;
+        $value = $this->getCriteria();
         $type = $this->getType();
 
-        switch($this->getType()){
+        switch($type){
             case FilterInterface::TYPE_INT:
                 $out = filter_var($value, \FILTER_VALIDATE_INT);
+                if($out == false){
+                    $out = null;
+                }
                 break;
-            case FilterInterface::TYPE_DATE:
+            case FilterInterface::TYPE_FLOAT:
+                $out = filter_var($value, \FILTER_VALIDATE_FLOAT);
+                if($out == false){
+                    $out = null;
+                }
+                break;
+            case FilterInterface::TYPE_DATETIME:
                 $out = \DateTime::createFromFormat(\DateTime::ISO8601, $out);
                 if($out == false){
-                    throw new \Cannibal\Bundle\FilterBundle\Filter\Exception\FilterCastException(sprintf('Failed to cast %s as a %s',$value, $type));
+                    $out = null;
                 }
-
                 break;
             case FilterInterface::TYPE_BOOL:
                 $out = filter_var($out, \FILTER_VALIDATE_BOOLEAN, \FILTER_NULL_ON_FAILURE);
-                if(null == $out){
-                    throw new \Cannibal\Bundle\FilterBundle\Filter\Exception\FilterCastException(sprintf('Failed to cast %s as a %s', $value, $type));
-                }
                 break;
         }
+
+        return $out;
     }
 
     public function setComparison($comparison)
