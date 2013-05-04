@@ -32,7 +32,7 @@ class ExprFactory implements ExprFactoryInterface
      *
      * @throws Exception\ExprFactoryException
      */
-    public function createExpr($memberName, FilterInterface $filter, $bindName, $doBind = true)
+    public function createExpr($memberName, FilterInterface $filter, $bindName)
     {
         $modifier = $filter->getComparison();
 
@@ -86,5 +86,13 @@ class ExprFactory implements ExprFactoryInterface
         }
 
         return $out;
+    }
+
+    public function createAndBind(QueryBuilder $builder, $memberName, FilterInterface $filter)
+    {
+        $bindName = $filter->getName();
+
+        $expr = $this->createExpr($memberName, $filter, $bindName);
+        $builder->andWhere($expr)->setParameter($bindName, $filter->getCriteria());
     }
 }
