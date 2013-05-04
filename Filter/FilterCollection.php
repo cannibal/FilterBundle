@@ -5,6 +5,7 @@ use Cannibal\Bundle\FilterBundle\Filter\FilterInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\ExecutionContext;
 use Cannibal\Bundle\FilterBundle\Filter\FilterCollectionInterface;
+use Cannibal\Bundle\FilterBundle\Filter\Expected\ExpectedFiltersInterface;
 
 /**
  * This class represents a collection of filters
@@ -20,11 +21,14 @@ class FilterCollection implements FilterCollectionInterface
         $this->expectedFilters = array();
     }
 
-    public function setExpectedFilters(array $expectedFilters)
+    public function setExpectedFilters(ExpectedFiltersInterface $expectedFilters)
     {
         $this->expectedFilters = $expectedFilters;
     }
 
+    /**
+     * @return \Cannibal\Bundle\FilterBundle\Filter\Expected\ExpectedFiltersInterface
+     */
     public function getExpectedFilters()
     {
         return $this->expectedFilters;
@@ -75,7 +79,7 @@ class FilterCollection implements FilterCollectionInterface
         foreach($filters as $filter){
             /** @var FilterInterface $filter */
             if(!in_array($filter->getName(), $expectedFilters)){
-                $context->addViolationAtPath('filters', sprintf('Filter %s is not expected', $filter->getName()));
+                $context->addViolationAt('filters', sprintf('Filter %s is not expected', $filter->getName()));
             }
         }
     }

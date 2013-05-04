@@ -2,7 +2,8 @@
 namespace Cannibal\Bundle\FilterBundle\Filter\Request\Fetcher;
 
 use Cannibal\Bundle\FilterBundle\Filter\FilterInterface;
-
+use Cannibal\Bundle\FilterBundle\Filter\Expected\ExpectedFiltersInterface;
+use Cannibal\Bundle\FilterBundle\Filter\Expected\ExpectedFilterInterface;
 /**
  * Class FilterFetcher
  *
@@ -10,15 +11,23 @@ use Cannibal\Bundle\FilterBundle\Filter\FilterInterface;
  */
 class FilterFetcher
 {
-    public function fetchFilters(array $data, array $expectedFilters = array())
+    public function fetchFilters(array $data, ExpectedFiltersInterface $expectedFilters = null)
     {
         $out = array();
-        foreach ($expectedFilters as $filter => $type) {
-            $notKey = sprintf('%s!', $filter);
-            if (isset($data[$filter]) || isset($data[$notKey])) {
-                $not = $filter == $notKey ? true : false;
-                $filter = preg_replace('/!/', '', $filter);
-                $filterParam = $data[$filter];
+        if($expectedFilters == null){
+            return $out;
+        }
+
+        /** @var ExpectedFilterInterface $expectedFilter */
+        foreach ($expectedFilters as $expectedFilter) {
+            $filterName = $expectedFilter->getName();
+            $type = $expectedFilter->getType();
+
+            $notKey = sprintf('%s!', $filterName);
+            if (isset($data[$filterName]) || isset($data[$notKey])) {
+                $not = $filterName == $notKey ? true : false;
+                $filter = preg_replace('/!/', '', $filterName);
+                $filterParam = $data[$filterName];
 
                 if (is_array($filterParam)) {
                     //family[like]test = family like test

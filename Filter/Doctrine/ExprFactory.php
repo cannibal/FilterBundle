@@ -90,7 +90,7 @@ class ExprFactory implements ExprFactoryInterface
 
     public function createAndBind(QueryBuilder $builder, $memberName, FilterInterface $filter)
     {
-        $bindName = $filter->getName();
+        $bindName = sprintf(':%s',$filter->getName());
 
         $expr = $this->createExpr($memberName, $filter, $bindName);
         $builder->andWhere($expr)->setParameter($bindName, $filter->getCriteria());

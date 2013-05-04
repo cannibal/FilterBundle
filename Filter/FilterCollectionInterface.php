@@ -1,9 +1,11 @@
 <?php
 namespace Cannibal\Bundle\FilterBundle\Filter;
 
+use Cannibal\Bundle\FilterBundle\Filter\Expected\ExpectedFiltersInterface;
+
 interface FilterCollectionInterface
 {
-    public function setExpectedFilters(array $expected);
+    public function setExpectedFilters(ExpectedFiltersInterface $expected);
 
     /**
      * @return array

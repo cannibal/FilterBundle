@@ -96,4 +96,20 @@ class FilterManager
 
         return $form->getData();
     }
+
+    /**
+     * @param FilterCollectionInterface $collection
+     * @return \Symfony\Component\Form\FormInterface
+     */
+    public function validateWithForm(FilterCollectionInterface $collection)
+    {
+        $formFactory = $this->getFormFactory();
+        $type = $this->createFilterCollectionType();
+
+        $form = $formFactory->create($type, $collection);
+
+        $form->isValid();
+
+        return $form;
+    }
 }
