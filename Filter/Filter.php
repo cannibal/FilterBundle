@@ -133,6 +133,8 @@ class Filter implements FilterInterface
             case FilterInterface::TYPE_BOOL:
                 $out = filter_var($out, \FILTER_VALIDATE_BOOLEAN, \FILTER_NULL_ON_FAILURE);
                 break;
+            default:
+                $out = $value;
         }
 
         return $out;

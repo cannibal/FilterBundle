@@ -93,6 +93,6 @@ class ExprFactory implements ExprFactoryInterface
         $bindName = sprintf(':%s',$filter->getName());
 
         $expr = $this->createExpr($memberName, $filter, $bindName);
-        $builder->andWhere($expr)->setParameter($bindName, $filter->getCriteria());
+        $builder->andWhere($expr)->setParameter($bindName, $filter->getCastCriteria());
     }
 }

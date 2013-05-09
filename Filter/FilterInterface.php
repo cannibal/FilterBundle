@@ -28,6 +28,14 @@ interface FilterInterface
      */
     public function getCriteria();
 
+
+    /**
+     * Returns the criteria as a native type
+     *
+     * @return mixed
+     */
+    public function getCastCriteria();
+
     /**
      * @return string
      */
