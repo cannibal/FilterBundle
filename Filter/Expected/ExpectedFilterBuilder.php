@@ -16,6 +16,8 @@ use Cannibal\Bundle\FilterBundle\Filter\Expected\ExpectedFilterBuildContextInter
 class ExpectedFilterBuilder implements ExpectedFilterBuildContextInterface
 {
     private $expectedFactory;
+
+    /** @var ExpectedFiltersInterface $currentCollection */
     private $currentCollection;
 
     public function __construct(ExpectedFilterFactory $expectedFactory)
@@ -68,6 +70,8 @@ class ExpectedFilterBuilder implements ExpectedFilterBuildContextInterface
             $out->setConfig($name, $value);
         }
 
+        $this->currentCollection->add($out);
+
         return $this;
     }
 
@@ -76,6 +80,9 @@ class ExpectedFilterBuilder implements ExpectedFilterBuildContextInterface
      */
     public function end()
     {
-        return $this->currentCollection;
+        $out = $this->currentCollection;
+
+        $this->currentCollection = null;
+        return $out;
     }
 }

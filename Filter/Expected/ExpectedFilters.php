@@ -31,4 +31,12 @@ class ExpectedFilters implements ExpectedFiltersInterface
     {
         return $this->filters[$name];
     }
+
+    /**
+     * @return array
+     */
+    public function getExpectedFilters()
+    {
+        return $this->filters;
+    }
 }

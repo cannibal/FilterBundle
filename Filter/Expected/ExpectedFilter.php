@@ -1,8 +1,9 @@
 <?php
 namespace Cannibal\Bundle\FilterBundle\Filter\Expected;
 use Cannibal\Bundle\FilterBundle\Filter\FilterInterface;
+use Cannibal\Bundle\FilterBundle\Filter\Expected\ExpectedFilterInterface;
 
-class ExpectedFilter
+class ExpectedFilter implements ExpectedFilterInterface
 {
     private $name;
     private $type;

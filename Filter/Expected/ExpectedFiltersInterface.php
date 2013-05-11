@@ -11,4 +11,9 @@ interface ExpectedFiltersInterface
      * @return \Cannibal\Bundle\FilterBundle\Filter\Expected\ExpectedFilterInterface
      */
     public function get($name);
+
+    /**
+     * @return array
+     */
+    public function getExpectedFilters();
 }

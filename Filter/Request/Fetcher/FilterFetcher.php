@@ -19,7 +19,7 @@ class FilterFetcher
         }
 
         /** @var ExpectedFilterInterface $expectedFilter */
-        foreach ($expectedFilters as $expectedFilter) {
+        foreach ($expectedFilters->getExpectedFilters() as $expectedFilter) {
             $filterName = $expectedFilter->getName();
             $type = $expectedFilter->getType();
 
