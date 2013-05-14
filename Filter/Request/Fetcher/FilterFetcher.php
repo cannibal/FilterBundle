@@ -29,7 +29,7 @@ class FilterFetcher
                 $filter = preg_replace('/!/', '', $filterName);
                 $filterParam = $data[$filterName];
 
-                if (is_array($filterParam)) {
+                if (is_array($filterParam) && $expectedFilter->getType() != FilterInterface::TYPE_ARRAY) {
                     //family[like]test = family like test
 
                     $keys = array_keys($filterParam);

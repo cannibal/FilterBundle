@@ -22,6 +22,7 @@ interface FilterInterface
     const TYPE_FLOAT = 'float';
     const TYPE_BOOL = 'boolean';
     const TYPE_STRING = 'string';
+    const TYPE_ARRAY = 'array';
 
     /**
      * @return string
