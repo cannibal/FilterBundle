@@ -64,8 +64,8 @@ class ExprFactory implements ExprFactoryInterface
                 $out = new Comparison($memberName, Comparison::LTE, $bindName);
                 break;
             case FilterInterface::NULLABLE_EQ:
-                if(empty($value)){
-                    $out = $expr->orX($expr->isNull($memberName), $expr->eq($memberName, ''));
+                if($value === null){
+                    $out = $expr->orX($expr->isNull($memberName), $memberName." = ''");
                 }
                 else{
                     $out = new Comparison($memberName, Comparison::EQ, $bindName);
@@ -93,6 +93,11 @@ class ExprFactory implements ExprFactoryInterface
         $bindName = sprintf(':%s',$filter->getName());
 
         $expr = $this->createExpr($memberName, $filter, $bindName);
-        $builder->andWhere($expr)->setParameter($bindName, $filter->getCastCriteria());
+        $builder->andWhere($expr);
+
+        $value = $filter->getCastCriteria();
+        if($value !== null){
+            $builder->setParameter($bindName, $value);
+        }
     }
 }

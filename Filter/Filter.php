@@ -91,7 +91,8 @@ class Filter implements FilterInterface
             FilterInterface::LTE,
             FilterInterface::GT,
             FilterInterface::GTE,
-            FilterInterface::IN
+            FilterInterface::IN,
+            FilterInterface::NULLABLE_EQ
         );
     }
 
