@@ -20,7 +20,7 @@ class Filter implements FilterInterface
         $this->name = null;
         $this->comparison = null;
         $this->criteria = null;
-        $this->not = false;
+        $this->isNot = false;
         $this->type = null;
     }
 

@@ -78,8 +78,9 @@ class FilterCollection implements FilterCollectionInterface
 
         foreach($filters as $filter){
             /** @var FilterInterface $filter */
-            if(!in_array($filter->getName(), $expectedFilters)){
-                $context->addViolationAt('filters', sprintf('Filter %s is not expected', $filter->getName()));
+            $name = $filter->getName();
+            if(!$this->hasFilter($name)){
+                $context->addViolationAt('filters', sprintf('Filter %s is not expected', $name));
             }
         }
     }

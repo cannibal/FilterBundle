@@ -25,9 +25,8 @@ class FilterFetcher
 
             $notKey = sprintf('%s!', $filterName);
             if (isset($data[$filterName]) || isset($data[$notKey])) {
-                $not = $filterName == $notKey ? true : false;
-                $filter = preg_replace('/!/', '', $filterName);
-                $filterParam = $data[$filterName];
+                $not =  isset($data[$notKey]) ? true : false;
+                $filterParam = $not == true ? $data[$notKey] : $data[$filterName];
 
                 if (is_array($filterParam) && $expectedFilter->getType() != FilterInterface::TYPE_ARRAY) {
                     //family[like]test = family like test
@@ -37,7 +36,7 @@ class FilterFetcher
                     $criteria = isset($filterParam[$comparison]) ? $filterParam[$comparison] : null;
 
                     $new = array(
-                        'name' => $filter,
+                        'name' => $filterName,
                         'comparison' => $comparison,
                         'criteria' => $criteria,
                         'type'=>$type,
@@ -45,7 +44,7 @@ class FilterFetcher
                     );
 
                     if($not){
-                        $new['not'] = 'true';
+                        $new['isNot'] = 'true';
                     }
 
                     $out['filters'][] = $new;
@@ -54,14 +53,14 @@ class FilterFetcher
                     //family=test = family eq test
 
                     $new = array(
-                        'name' => $filter,
+                        'name' => $filterName,
                         'comparison' => FilterInterface::NULLABLE_EQ,
                         'criteria' => $filterParam,
                         'type'=>$type,
                     );
 
                     if($not){
-                        $new['not'] = 'true';
+                        $new['isNot'] = 'true';
                     }
 
                     $out['filters'][] = $new;
