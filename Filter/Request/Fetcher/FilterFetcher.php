@@ -29,7 +29,8 @@ class FilterFetcher
                 $filterParam = $not == true ? $data[$notKey] : $data[$filterName];
 
                 if (is_array($filterParam) && $expectedFilter->getType() != FilterInterface::TYPE_ARRAY) {
-                    //family[like]test = family like test
+                    //family[like]=test == family like test
+                    //family[in] = array('Smith', 'Jones');
 
                     $keys = array_keys($filterParam);
                     $comparison = isset($keys[0]) ? $keys[0] : null;

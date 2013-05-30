@@ -38,7 +38,8 @@ class FilterType extends AbstractType
             FilterInterface::LT=>'<',
             FilterInterface::LTE=>'<=',
             FilterInterface::GT=>'>',
-            FilterInterface::GTE=>'>='
+            FilterInterface::GTE=>'>=',
+            FilterInterface::IN=>'In'
         );
     }
 
