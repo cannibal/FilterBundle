@@ -126,7 +126,7 @@ class Filter implements FilterInterface
                 }
                 break;
             case FilterInterface::TYPE_DATETIME:
-                $out = \DateTime::createFromFormat(\DateTime::ISO8601, $out);
+                $out = \DateTime::createFromFormat(\DateTime::ISO8601, $value);
                 if($out == false){
                     $out = null;
                 }
