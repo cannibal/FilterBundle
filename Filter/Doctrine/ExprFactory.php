@@ -97,7 +97,12 @@ class ExprFactory implements ExprFactoryInterface
 
         $value = $filter->getCastCriteria();
         if($value !== null){
-            $builder->setParameter($bindName, $value);
+            if($filter->getType() == FilterInterface::TYPE_BOOL){
+                $builder->setParameter($bindName, $value, \PDO::PARAM_BOOL);
+            }
+            else{
+                $builder->setParameter($bindName, $value);
+            }
         }
     }
 }

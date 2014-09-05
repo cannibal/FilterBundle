@@ -51,4 +51,9 @@ interface FilterInterface
      * @return boolean
      */
     public function isNot();
+
+    /**
+     * @return mixed
+     */
+    public function getType();
 }
